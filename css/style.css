@@ -1,3 +1,12 @@
 body {
     font-family: 'Josefin Sans', sans-serif;
 }
+
+nav {
+    color: #f8f9fa;
+}
+
+.nav-content {
+    border-bottom: 2px solid rgb(218, 210, 210);
+    margin-top: 4px;
+}
