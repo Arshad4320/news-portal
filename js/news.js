@@ -1,4 +1,5 @@
-// blog button 
+
+// blog button
 document.getElementById('blog').addEventListener('click', function () {
     const blogContainer = document.getElementById('blog-container');
     blogContainer.innerHTML = ` <div class="accordion blog-content container" id="accordionExample ">
@@ -58,7 +59,37 @@ document.getElementById('blog').addEventListener('click', function () {
             </div>
         </div>
     </div>`
-
-
 })
-         // blog button end
+// blog button end
+
+// header-section-start
+const loadCatagories = () => {
+    fetch(`https://openapi.programming-hero.com/api/news/categories`)
+        .then(res => res.json())
+        .then(data => displayCatagories(data.data.news_category))
+}
+const displayCatagories = (items) => {
+    console.log(items)
+    const navContainer = document.getElementById('nav-container');
+    items.forEach(item => {
+        const navDiv = document.createElement('ul')
+        navDiv.classList.add('navbar-nav');
+        navDiv.innerHTML = `
+        <li  class="nav-item"><a class="text-decoration-none text-secondary" href="#" >${item.category_name}</a></li>
+        `
+        navContainer.appendChild(navDiv);
+    })
+
+}
+
+const loadCardItems = () => {
+
+}
+
+
+
+
+loadCatagories();
+
+
+// header-section-end
