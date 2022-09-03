@@ -1,4 +1,4 @@
-const catagories = () => {
+const catagoriesElement = () => {
     const url = `https://openapi.programming-hero.com/api/news/categories`;
     fetch(url)
         .then(res => res.json())
@@ -6,18 +6,18 @@ const catagories = () => {
         .catch((error) => console.log(error))
 }
 const categoriesElement = (items) => {
-    const catagories = document.getElementById('categories');
+    const catagoriesElement = document.getElementById('categories');
     items.forEach(item => {
         const { category_name, category_id } = item;
         const createElementLi = document.createElement('li');
         createElementLi.innerHTML = `
-        <a class="nav-link  fs-6 fw-bold p-2 me-3" onclick="postDetails('${category_id}')" href="#" style="text-decoration: none">${category_name}</a>
+        <a class="nav-link  fs-6 fw-bold p-2 me-3" onclick="postDetailsInfo('${category_id}')" href="#" style="text-decoration: none">${category_name}</a>
         `
-        catagories.appendChild(createElementLi);
+        catagoriesElement.appendChild(createElementLi);
 
     })
 }
-const postDetails = (categories_id) => {
+const postDetailsInfo = (categories_id) => {
     spinnerLading(true)
     const url = `https://openapi.programming-hero.com/api/news/category/${categories_id}`
     fetch(url)
@@ -26,7 +26,7 @@ const postDetails = (categories_id) => {
             spinnerLading(false)
             let localData = data.data
             localData.sort((a, b) => b.total_view - a.total_view)
-            showPostDetails(localData)
+            showpostDetailsInfo(localData)
         })
         .catch((error) => {
             spinnerLading(false)
@@ -34,7 +34,7 @@ const postDetails = (categories_id) => {
         })
 }
 
-const showPostDetails = (allData) => {
+const showpostDetailsInfo = (allData) => {
     const cardDetails = document.getElementById('card-details');
     // Founding Items
     const foundedItem = document.getElementById('founded-item');
@@ -74,7 +74,7 @@ const showPostDetails = (allData) => {
               <i class="fa fa-sharp fa-solid fa-eye mt-2 me-2"></i>
               <p class="me-5 mt-2">${total_view ? total_view : 'Details Unavailable'}</p>
              <div>
-             <button class="btn btn-outline-primary"  href="#" onclick="authorDetails('${_id}')" style="text-decoration: none" data-bs-toggle="modal" data-bs-target="#postDetailModal">Details</button>
+             <button class="btn btn-outline-primary"  href="#" onclick="authorInfo('${_id}')" style="text-decoration: none" data-bs-toggle="modal" data-bs-target="#postDetailModal">Details</button>
              </div>
               </div>
            </div>
@@ -93,12 +93,12 @@ const showPostDetails = (allData) => {
 }
 
 
-const authorDetails = (authorID) => {
+const authorInfo = (authorID) => {
     const url = `https://openapi.programming-hero.com/api/news/${authorID}`
     fetch(url)
         .then(response => response.json())
         .then(modalData => showModalAuthor(modalData.data))
-        .then(data => showPostDetails(data.data))
+        .then(data => showpostDetailsInfo(data.data))
         .catch((error) => console.log(error));
 
 }
@@ -133,6 +133,7 @@ const showModalAuthor = (authorDetailModal) => {
 
 }
 
-authorDetails();
-catagories();
-postDetails();
+authorInfo();
+catagoriesElement();
+postDetailsInfo();
+
