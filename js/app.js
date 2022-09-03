@@ -11,7 +11,7 @@ const categoriesElement = (items) => {
         const { category_name, category_id } = item;
         const createElementLi = document.createElement('li');
         createElementLi.innerHTML = `
-        <a class="nav-link  fs-6 p-2 me-3" onclick="postDetails('${category_id}')" href="#" style="text-decoration: none">${category_name}</a>
+        <a class="nav-link  fs-6 fw-bold p-2 me-3" onclick="postDetails('${category_id}')" href="#" style="text-decoration: none">${category_name}</a>
         `
         catagories.appendChild(createElementLi);
 
@@ -102,3 +102,37 @@ const authorDetails = (authorID) => {
         .catch((error) => console.log(error));
 
 }
+const showModalAuthor = (authorDetailModal) => {
+    const modalId = document.getElementById('modald');
+    modalId.textContent = '';
+    authorDetailModal.forEach(modalData => {
+        const { author, rating, details, thumbnail_url, total_view } = modalData;
+        const { name, published_date, img } = author;
+        const createModalDiv = document.createElement('div');
+        createModalDiv.classList.add('modal-content');
+        createModalDiv.classList.add('text-center');
+        createModalDiv.innerHTML = `
+    <div class="modal-header bg-primary">
+            <h5 class="modal-title fw-bold text-white" id="postDetailModalLabel">Author Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ">
+            <img src="${img ? img : 'No Data Found'}" alt="" style="width: 150px; height: 150px;";>
+            <p>Author Name: ${name ? name : 'No Data Found'}</p>
+            <p>Published Date: ${published_date ? published_date : 'No Data Found'}</p>
+            <p>Details: ${details.length > 300 ? details.slice(0, 300) + '...' : details}</p>
+            <p>Rating: ${rating.number ? rating.number : 'No Data Found'}</p>
+            <p>Total View: ${total_view ? total_view : 'No Data Found'}</p>
+          </div>
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+    `
+        modalId.appendChild(createModalDiv);
+    })
+
+}
+
+authorDetails();
+catagories();
+postDetails();
