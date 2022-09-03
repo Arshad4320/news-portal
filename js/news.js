@@ -62,34 +62,102 @@ document.getElementById('blog').addEventListener('click', function () {
 })
 // blog button end
 
-// header-section-start
-const loadCatagories = () => {
-    fetch(`https://openapi.programming-hero.com/api/news/categories`)
-        .then(res => res.json())
-        .then(data => displayCatagories(data.data.news_category))
+
+const loadCatagories = async () => {
+    url = `https://openapi.programming-hero.com/api/news/categories`;
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        displayData(data.data.news_category)
+    }
+    catch (error) {
+        console.log(error)
+    }
+
 }
-const displayCatagories = (items) => {
-    console.log(items)
-    const navContainer = document.getElementById('nav-container');
-    items.forEach(item => {
-        const navDiv = document.createElement('ul')
-        navDiv.classList.add('navbar-nav');
-        navDiv.innerHTML = `
-        <li  class="nav-item"><a class="text-decoration-none text-secondary" href="#" >${item.category_name}</a></li>
-        `
-        navContainer.appendChild(navDiv);
+
+const displayData = (catagories) => {
+    const catagoriesContainer = document.getElementById('categorys');
+    catagories.forEach(category => {
+        const catagoryList = document.createElement('div');
+        catagoryList.innerHTML = `
+      <li onclick="loadNews('${category.category_id}')">${category.category_name}</li>
+      `;
+        catagoriesContainer.appendChild(catagoryList)
+
     })
+}
+loadCatagories()
 
+
+
+const loadNews = async (category_id) => {
+    const url = ` https://openapi.programming-hero.com/api/news/category/${category_id}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    displayCategory(data.data);
 }
 
-const loadCardItems = () => {
+const displayCategory = categories => {
+    toggleSpinner(true)
+    console.log(categories);
+    const categoryContainer = document.getElementById('category-container');
+    categoryContainer.textContent = '';
+    const noNews = document.getElementById('no-news-found');
+    if (categories.length === 0) {
+        noNews.classList.remove('d-none');
+    }
+    else {
+        noNews.classList.add('d-none');
+    }
+    categories.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.innerHTML = `
+   <div class="row w-100 g-0 mb-3">
+          <div class="col-md-4">
+            <img src="${category.image_url}" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+            <h5 class="card-title">${category.title}</h5>
+            <p class="card-text"><small class="text-muted">${category.author.name} ${category.author.published_date}</small></p>
+              <p class="card-text">${category.details.slice(0, 100)}</p>
+              <div class="d-flex justify-content-around">
+              <div class="d-flex">
+              <img src="${category.author.img}" class="rounded-circle" style="max-width: 40px;" alt="...">
+              <p class="card-text"><small class="text-muted">${category.author.name} </small></p>
+            </div>
+              <div class="d-flex "">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye " viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+            <p class="card-text"><small class="text-muted">${category.total_view} </small></p>
+              </div>
+              <button type="button" class="btn btn-primary">Primary</button>
 
+            </div>
+            </div>
+          </div>
+        </div>
+   `;
+        categoryContainer.appendChild(categoryDiv);
+    });
+    toggleSpinner(false)
 }
 
+const toggleSpinner = isLoading => {
+    const spinnerSection = document.getElementById('loader');
+    if (isLoading) {
+        spinnerSection.classList.remove('d-none')
+    }
+    else {
+        spinnerSection.classList.add('d-none')
+    };
+}
+
+loadCategory();
 
 
 
-loadCatagories();
 
-
-// header-section-end
